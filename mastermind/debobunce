@@ -1,0 +1,38 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity ButtonDebouncer is
+    Port ( Button : in std_logic;
+           DebouncedButton : out std_logic;
+           Clk : in std_logic;
+           Reset : in std_logic);
+end ButtonDebouncer;
+
+architecture Behavioral of ButtonDebouncer is
+
+    signal ButtonReg, DebouncedReg, DebouncedButtonTemp : std_logic := '0';
+
+begin
+
+    process (Clk, Reset) is
+    begin
+        if Reset = '1' then
+            ButtonReg <= '0';
+            DebouncedReg <= '0';
+            DebouncedButtonTemp <= '0';
+        elsif rising_edge(Clk) then
+            ButtonReg <= Button;
+            
+            -- Debounce logic
+            if ButtonReg = DebouncedReg then
+                DebouncedButtonTemp <= ButtonReg;
+            end if;
+            
+            DebouncedReg <= DebouncedButtonTemp;
+        end if;
+    end process;
+
+    DebouncedButton <= DebouncedReg;
+
+end Behavioral;

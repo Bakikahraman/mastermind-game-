@@ -1,0 +1,191 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity TestBench is
+end TestBench;
+
+architecture Behavioral of TestBench is
+  component MastermindMain is
+    Port ( Color1 : in STD_LOGIC_VECTOR (2 downto 0);
+           Color2 : in STD_LOGIC_VECTOR (2 downto 0);
+           Color3 : in STD_LOGIC_VECTOR (2 downto 0);
+           Color4 : in STD_LOGIC_VECTOR (2 downto 0);
+           Rbtn : in STD_LOGIC; --reset için kullanılır
+           SubmitBtn : in STD_LOGIC; --yanıtı kontrol etmek için
+           Clk : in STD_LOGIC;
+           segment7 : out std_logic_vector(6 downto 0);
+           a1, a2, a3, a0 : out STD_LOGIC; --Bu çıkışlar, 7 segmentli ekranın farklı segmentlerini kontrol eder ve görsel olarak rakamları veya harfleri temsil eden desenleri oluştururlar. Her bir çıkış, bir segmentin açık veya kapalı olmasını belirler.
+           LED1 : out std_logic_vector(2 downto 0);
+           LED2 : out std_logic_vector(2 downto 0);
+           LED3 : out std_logic_vector(2 downto 0);
+           LED4 : out std_logic_vector(2 downto 0));
+end component;
+
+
+signal  Color1 :         STD_LOGIC_VECTOR (2 downto 0);
+signal  Color2 :         STD_LOGIC_VECTOR (2 downto 0);
+signal  Color3 :         STD_LOGIC_VECTOR (2 downto 0);
+signal  Color4 :         STD_LOGIC_VECTOR (2 downto 0);
+signal  Rbtn :           STD_LOGIC; --reset için kullanılır
+signal  SubmitBtn :      STD_LOGIC; --yanıtı kontrol etmek için
+signal  Clk :            STD_LOGIC;
+signal  segment7 :       std_logic_vector(6 downto 0);
+signal  a1, a2, a3, a0 : STD_LOGIC; --Bu çıkışlar, 7 segmentli ekranın farklı segmentlerini kontrol eder ve görsel olarak rakamları veya harfleri temsil eden desenleri oluştururlar. Her bir çıkış, bir segmentin açık veya kapalı olmasını belirler.
+signal  LED1 :           std_logic_vector(2 downto 0);
+signal  LED2 :           std_logic_vector(2 downto 0);
+signal  LED3 :           std_logic_vector(2 downto 0);
+signal  LED4 :           std_logic_vector(2 downto 0);
+        
+constant clk_period : time := 20 ns;
+
+
+begin
+  clock_process : process
+    begin
+        Clk <= '0';
+        wait for clk_period/2;
+        Clk <= '1';
+        wait for clk_period/2;
+    end process;
+
+
+ uut : entity work.MastermindMain
+
+  port map (Color1 => Color1, Color2 => Color2, Color3 => Color3, Color4 => Color4, Rbtn => Rbtn, SubmitBtn => SubmitBtn, Clk => Clk, segment7 => segment7, a1 => a1, a2 => a2, a3 => a3, a0 => a0, LED1 => LED1, LED2 => LED2, LED3 => LED3, LED4 => LED4);
+
+process
+
+begin
+color1 <= "000";
+color2 <= "000";
+color3 <= "000";
+color4 <= "000";
+Rbtn <= '0';
+SubmitBtn <= '0';
+wait for 10ns;
+
+Color1 <= "001";
+Color2 <= "010";
+Color3 <= "100";
+Color4 <= "101";
+
+wait for clk_period/2;
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+
+
+Color1 <= "001";
+Color2 <= "011";
+Color3 <= "110";
+Color4 <= "111";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+Color1 <= "101";
+Color2 <= "110";
+Color3 <= "000";
+Color4 <= "001";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+Color1 <= "111";
+Color2 <= "011";
+Color3 <= "101";
+Color4 <= "101";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+Color1 <= "101";
+Color2 <= "110";
+Color3 <= "100";
+Color4 <= "101";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+Color1 <= "001";
+Color2 <= "010";
+Color3 <= "111";
+Color4 <= "001";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+
+Color1 <= "101";
+Color2 <= "110";
+Color3 <= "111";
+Color4 <= "101";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+
+Color1 <= "001";
+Color2 <= "010";
+Color3 <= "110";
+Color4 <= "101";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+
+Color1 <= "101";
+Color2 <= "010";
+Color3 <= "110";
+Color4 <= "101";
+
+--Submit the answer
+
+SubmitBtn <= '1';
+wait for clk_period/2;
+SubmitBtn <= '0';
+
+
+Color1 <= "001";
+Color2 <= "010";
+Color3 <= "100";
+Color4 <= "101";
+
+--Submit the answer
+
+
+--Check the answer
+
+assert segment7 = "001100" report "Wrong answer";
+
+--Reset the game
+
+Rbtn <= '0';
+wait for clk_period/2;
+Rbtn <= '1';
+wait;
+end process;
+end Behavioral;
